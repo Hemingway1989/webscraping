@@ -2,6 +2,8 @@ import requests
 from requests.exceptions import HTTPError
 from requests.exceptions import Timeout
 from basic_authentication import basic_authentication
+from requests.adapters import HTTPAdapter
+from requests.exceptions import ConnectionError
 
 def get_request(url, response_format = None, timeout = (5, 5), authentication = False, login = None):
     # status code 1xx Information
@@ -12,13 +14,20 @@ def get_request(url, response_format = None, timeout = (5, 5), authentication = 
 
     # timeout parameter 1st: time to establish a connection, 2nd: time of waiting for response
 
+    adapter = HTTPAdapter(max_retries = 3)
 
-    with requests.Session() as session:
-        if authentication is True:
-            session.auth = basic_authentication(login)
+    session = requests.Session()
+
+    # use adapter for all requests to endpoints tat start with this url
+    session.mount(url, adapter)
+
+    if authentication is True:
+        session.auth = basic_authentication(login)
 
     try:
         response = session.get(url, timeout = timeout)
+    except ConnectionError as conn_error:
+        print(con_error)
     except Timeout:
         print('The request timed out')
     except HTTPError as http_error:
@@ -49,10 +58,9 @@ def get_request(url, response_format = None, timeout = (5, 5), authentication = 
 
 
 # usage example
-# url = 'https://github.com'
-#
-# get_request(url,
-#             response_format = 'text',
-#             timeout = (1, 1),
-#             authentication = True,
-#             login = 'Hemingway1989')
+
+get_request(url = 'https://github.com',
+            response_format = 'text',
+            timeout = (1, 1),
+            authentication = True,
+            login = 'Hemingway1989')
