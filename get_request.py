@@ -1,5 +1,6 @@
 import requests
 from requests.exceptions import HTTPError
+from requests.exceptions import Timeout
 
 def get_request(url, response_format = None, timeout = (5, 5)):
     # status code 1xx Information
@@ -12,7 +13,8 @@ def get_request(url, response_format = None, timeout = (5, 5)):
 
     try:
         response = requests.get(url, timeout = timeout)
-
+    except Timeout:
+        print('The request timed out')
     except HTTPError as http_error:
         print(f'HTTP error occured: {http_error}')
     except Exception as other_error:
@@ -43,4 +45,4 @@ def get_request(url, response_format = None, timeout = (5, 5)):
 # usage example
 url = 'https://facebook.com'
 
-get_request(url, 'text')
+get_request(url, response_format = 'text', timeout = (1, 1))
