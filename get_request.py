@@ -1,15 +1,18 @@
 import requests
 from requests.exceptions import HTTPError
 
-def get_request(url, response_format = None):
+def get_request(url, response_format = None, timeout = (5, 5)):
     # status code 1xx Information
     # status code 2xx Success - request was received, understood and accepted
     # status code 3xx Redirection
     # status code 4xx Client Errors
     # status code 5xx Server Errors
 
+    # timeout parameter 1st: time to establish a connection, 2nd: time of waiting for response
+
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout = timeout)
+
     except HTTPError as http_error:
         print(f'HTTP error occured: {http_error}')
     except Exception as other_error:
@@ -36,7 +39,8 @@ def get_request(url, response_format = None):
         text_response = response.text
         return text_response
 
+
 # usage example
-# url = 'https://axa.csod.com'
-#
-# get_request(url, 'text')
+url = 'https://facebook.com'
+
+get_request(url, 'text')
