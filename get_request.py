@@ -1,8 +1,9 @@
 import requests
 from requests.exceptions import HTTPError
 from requests.exceptions import Timeout
+from basic_authentication import basic_authentication
 
-def get_request(url, response_format = None, timeout = (5, 5)):
+def get_request(url, response_format = None, timeout = (5, 5), authentication = False, login = None):
     # status code 1xx Information
     # status code 2xx Success - request was received, understood and accepted
     # status code 3xx Redirection
@@ -11,8 +12,12 @@ def get_request(url, response_format = None, timeout = (5, 5)):
 
     # timeout parameter 1st: time to establish a connection, 2nd: time of waiting for response
 
+
+    with requests.Session() as session:
+        if authentication is True:
+            session.auth = basic_authentication(login)
     try:
-        response = requests.get(url, timeout = timeout)
+        response = session.get(url, timeout = timeout)
     except Timeout:
         print('The request timed out')
     except HTTPError as http_error:
