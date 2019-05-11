@@ -16,6 +16,7 @@ def get_request(url, response_format = None, timeout = (5, 5), authentication = 
     with requests.Session() as session:
         if authentication is True:
             session.auth = basic_authentication(login)
+
     try:
         response = session.get(url, timeout = timeout)
     except Timeout:
@@ -48,6 +49,10 @@ def get_request(url, response_format = None, timeout = (5, 5), authentication = 
 
 
 # usage example
-url = 'https://facebook.com'
-
-get_request(url, response_format = 'text', timeout = (1, 1))
+# url = 'https://github.com'
+#
+# get_request(url,
+#             response_format = 'text',
+#             timeout = (1, 1),
+#             authentication = True,
+#             login = 'Hemingway1989')
