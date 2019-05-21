@@ -1,7 +1,7 @@
 import requests
 from requests.exceptions import HTTPError
 from requests.exceptions import Timeout
-from basic_authentication import basic_authentication
+from Modules.basic_authentication import basic_authentication
 from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError
 
